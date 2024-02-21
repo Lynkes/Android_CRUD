@@ -1,0 +1,75 @@
+package com.exemplocrud;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.exemplocrud.databinding.ActivityMainBinding;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ActivityMainBinding binding;
+
+    //PARTE I
+    private EditText nome;
+    private EditText cpf;
+    private EditText telefone;
+
+    private AlunoDao dao;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
+
+
+        //ORIGINAL
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+
+        //PARTE I
+        //Vinculando os campos do layout com as variáveis do Java,
+        //esses comandos tem que vir depois dos comandos setContentView
+        nome = findViewById(R.id.editNome);
+        cpf = findViewById(R.id.editCPF);
+        telefone = findViewById(R.id.editTelefone);
+
+        dao = new AlunoDao(this);
+
+
+        //ORIGINAL
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+
+        //método para botão salvar qdo clicado
+        public void salvar(View view){
+            Aluno a = new Aluno();
+            a.setNome(nome.getText().toString());
+            a.setCpf(cpf.getText().toString());
+            a.setTelefone(telefone.getText().toString());
+            long id = dao.inserir(a); //inserir o aluno
+            Toast.makeText(this,"Aluno inserido com id: " +id, Toast.LENGTH_SHORT).show();
+        }
+
+
+}
